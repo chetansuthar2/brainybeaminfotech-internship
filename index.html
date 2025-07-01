@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shared Input Component</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: #f5f7fa;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 800px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+    
+    .app-header {
+      background: #3498db;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .app-header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+    }
+    
+    .app-header p {
+      opacity: 0.9;
+    }
+    
+    .app-content {
+      padding: 30px;
+    }
+    
+    .form-container {
+      display: grid;
+      gap: 20px;
+    }
+    
+    .form-section {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      border-left: 4px solid #3498db;
+    }
+    
+    .form-section h3 {
+      margin-bottom: 15px;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .form-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .form-controls {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    button {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+    }
+    
+    .btn-primary {
+      background: #3498db;
+      color: white;
+    }
+    
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+    
+    .btn-primary:hover {
+      background: #2980b9;
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary:hover {
+      background: #d0d0d0;
+      transform: translateY(-1px);
+    }
+    
+    .form-data {
+      background: #f0f8ff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      border: 1px dashed #3498db;
+    }
+    
+    .input-container {
+      margin-bottom: 15px;
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .input-container label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #2c3e50;
+      font-size: 0.95rem;
+    }
+    
+    .input-field {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+    
+    .input-field:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+    
+    .checkbox-container, .radio-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .checkbox-container label, .radio-container label {
+      margin-bottom: 0;
+      font-weight: normal;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    
+    .input-checkbox, .input-radio {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    
+    .required {
+      color: #e74c3c;
+    }
+    
+    .submitted-data {
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+    
+    .submitted-data h3 {
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="container">
+      <div class="app-header">
+        <h1>Shared Input Component</h1>
+        <p>A reusable Vue component for all form input types</p>
+      </div>
+      
+      <div class="app-content">
+        <form @submit.prevent="submitForm" @reset="resetForm" class="form-container">
+          <div class="form-section">
+            <h3>Personal Information</h3>
+            
+            <div class="form-row">
+              <shared-input 
+                id="firstName"
+                type="text" 
+                label="First Name" 
+                placeholder="Enter your first name"
+                v-model="formData.firstName"
+                required
+              ></shared-input>
+              
+              <shared-input 
+                id="lastName"
+                type="text" 
+                label="Last Name" 
+                placeholder="Enter your last name"
+                v-model="formData.lastName"
+                required
+              ></shared-input>
+            </div>
+            
+            <shared-input 
+              id="email"
+              type="email" 
+              label="Email Address" 
+              placeholder="your.email@example.com"
+              v-model="formData.email"
+              required
+            ></shared-input>
+            
+            <shared-input 
+              id="phone"
+              type="text" 
+              label="Phone Number" 
+              placeholder="(123) 456-7890"
+              v-model="formData.phone"
+            ></shared-input>
+          </div>
+          
+          <div class="form-section">
+            <h3>Account Details</h3>
+            
+            <shared-input 
+              id="username"
+              type="text" 
+              label="Username" 
+              placeholder="Choose a username"
+              v-model="formData.username"
+              required
+            ></shared-input>
+            
+            <shared-input 
+              id="password"
+              type="password" 
+              label="Password" 
+              placeholder="Create a password"
+              v-model="formData.password"
+              required
+            ></shared-input>
+          </div>
+          
+          <div class="form-section">
+            <h3>Preferences</h3>
+            
+            <shared-input 
+              id="bio"
+              type="textarea" 
+              label="Bio" 
+              placeholder="Tell us about yourself..."
+              v-model="formData.bio"
+              :rows="3"
+            ></shared-input>
+            
+            <div class="form-row">
+              <shared-input 
+                id="newsletter"
+                type="checkbox" 
+                label="Subscribe to newsletter"
+                v-model="formData.newsletter"
+              ></shared-input>
+              
+              <shared-input 
+                id="promotions"
+                type="checkbox" 
+                label="Receive promotions"
+                v-model="formData.promotions"
+              ></shared-input>
+            </div>
+            
+            <h4 style="margin: 15px 0 10px; color: #2c3e50;">Preferred Contact Method</h4>
+            <div class="form-row">
+              <shared-input 
+                id="contactEmail"
+                type="radio" 
+                label="Email"
+                radio-value="email"
+                v-model="formData.contactMethod"
+              ></shared-input>
+              
+              <shared-input 
+                id="contactSms"
+                type="radio" 
+                label="SMS"
+                radio-value="sms"
+                v-model="formData.contactMethod"
+              ></shared-input>
+              
+              <shared-input 
+                id="contactPhone"
+                type="radio" 
+                label="Phone"
+                radio-value="phone"
+                v-model="formData.contactMethod"
+              ></shared-input>
+            </div>
+          </div>
+          
+          <div class="form-controls">
+            <button type="reset" class="btn-secondary">
+              Reset Form
+            </button>
+            <button type="submit" class="btn-primary">
+              Submit
+            </button>
+          </div>
+        </form>
+        
+        <div class="submitted-data" v-if="submitted">
+          <h3>Submitted Data:</h3>
+          <div class="form-data">{{ formattedFormData }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref, computed } = Vue;
+    
+    // Shared Input Component
+    const SharedInput = {
+      props: {
+        type: {
+          type: String,
+          default: 'text',
+          validator: value => ['text', 'email', 'password', 'textarea', 'checkbox', 'radio'].includes(value)
+        },
+        modelValue: {
+          type: [String, Boolean, Number, Array],
+          default: ''
+        },
+        label: String,
+        placeholder: String,
+        id: String,
+        required: Boolean,
+        radioValue: {
+          type: [String, Number],
+          default: ''
+        },
+        rows: {
+          type: Number,
+          default: 3
+        }
+      },
+      emits: ['update:modelValue'],
+      methods: {
+        handleInput(e) {
+          if (this.type === 'checkbox') {
+            this.$emit('update:modelValue', e.target.checked);
+          } else if (this.type === 'radio') {
+            this.$emit('update:modelValue', this.radioValue);
+          } else {
+            this.$emit('update:modelValue', e.target.value);
+          }
+        }
+      },
+      template: `
+        <div class="input-container">
+          <label v-if="label && type !== 'checkbox' && type !== 'radio'" :for="id">
+            {{ label }} <span v-if="required" class="required">*</span>
+          </label>
+          
+          <!-- Text, Email, Password -->
+          <input
+            v-if="type === 'text' || type === 'email' || type === 'password'"
+            :id="id"
+            :type="type"
+            :value="modelValue"
+            @input="handleInput"
+            :placeholder="placeholder"
+            :required="required"
+            class="input-field"
+          />
+          
+          <!-- Textarea -->
+          <textarea
+            v-else-if="type === 'textarea'"
+            :id="id"
+            :value="modelValue"
+            @input="handleInput"
+            :placeholder="placeholder"
+            :required="required"
+            :rows="rows"
+            class="input-field"
+          ></textarea>
+          
+          <!-- Checkbox -->
+          <div v-else-if="type === 'checkbox'" class="checkbox-container">
+            <input
+              :id="id"
+              type="checkbox"
+              :checked="modelValue"
+              @change="handleInput"
+              :required="required"
+              class="input-checkbox"
+            />
+            <label :for="id">
+              {{ label }} <span v-if="required" class="required">*</span>
+            </label>
+          </div>
+          
+          <!-- Radio -->
+          <div v-else-if="type === 'radio'" class="radio-container">
+            <input
+              :id="id"
+              type="radio"
+              :value="radioValue"
+              :checked="modelValue === radioValue"
+              @change="handleInput"
+              :required="required"
+              class="input-radio"
+            />
+            <label :for="id">
+              {{ label }}
+            </label>
+          </div>
+        </div>
+      `
+    };
+    
+    // Main App
+    const app = createApp({
+      components: {
+        SharedInput
+      },
+      setup() {
+        // Form state
+        const formData = ref({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          username: '',
+          password: '',
+          bio: '',
+          newsletter: true,
+          promotions: false,
+          contactMethod: 'email'
+        });
+        
+        const submitted = ref(false);
+        
+        // Submit form handler
+        const submitForm = () => {
+          submitted.value = true;
+        };
+        
+        // Reset form handler
+        const resetForm = () => {
+          formData.value = {
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            username: '',
+            password: '',
+            bio: '',
+            newsletter: true,
+            promotions: false,
+            contactMethod: 'email'
+          };
+          submitted.value = false;
+        };
+        
+        // Format form data for display
+        const formattedFormData = computed(() => {
+          return JSON.stringify(formData.value, null, 2);
+        });
+        
+        return {
+          formData,
+          submitted,
+          submitForm,
+          resetForm,
+          formattedFormData
+        };
+      }
+    });
+    
+    app.component('SharedInput', SharedInput);
+    app.mount('#app');
+  </script>
+</body>
+</html>
